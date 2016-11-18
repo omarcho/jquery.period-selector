@@ -1,0 +1,29 @@
+﻿/**PeriodSelector*/
+
+.period-selector.selcount-2 > div.row {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+.period-selector.selcount-2 > div.row > select:first-child{
+    padding-right: 0px;
+    padding-left: 15px;
+    float: left;
+    width: 50%;
+}
+.period-selector.selcount-2 > div.row > select:nth-last-child(-n+1){
+    padding-right: 15px;
+    padding-left: 0px;
+    float: left;
+    width: 50%;
+}
+
+
+.period-selector:not(.monthSel) > div.row > select.monthSel,
+.period-selector:not(.quarterSel) > div.row > select.quarterSel,
+.period-selector:not(.yearSel) > div.row > select.yearSel
+
+{
+    display:none;
+}
+
