@@ -2,7 +2,7 @@
 	if ( typeof define === 'function' && define.amd ) {
 	    // AMD
         
-	    define(['knockout','jquery','vendors/jquery.period-selector'], function ( ko, $) {
+	    define(['knockout','jquery','jquery.period-selector'], function ( ko, $) {
 
 	        return factory(ko, $, window, document);
 	        

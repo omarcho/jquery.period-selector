@@ -1,0 +1,11 @@
+
+jquery.period-selector.js
+----------------
+period-selector.js
+jquery.period-selector.js
+
+knockout-jquery.period-selector.js
+----------------
+period-selector.js
+jquery.period-selector.js
+knockout-jquery.period-selector.js

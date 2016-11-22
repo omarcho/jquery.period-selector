@@ -22,6 +22,12 @@ module.exports = function(grunt) {
                 src: ['**'],
                 dest: '<%= dirs.dist %>/',
             },
+			css: {
+                expand: true,
+				cwd:'<%= dirs.src %>/css',
+                src: ['**'],
+                dest: '<%= dirs.dist %>/css',
+            },
 			examples: {
                 expand: true,
                 src: ['<%= dirs.libs %>/**', '<%= dirs.dist %>/**'],
@@ -52,6 +58,32 @@ module.exports = function(grunt) {
                 configFile: 'karma.conf.js'
             }
         },
+		requirejs: {
+            dist: {
+                options: {
+                    baseUrl: "./",
+                    appDir: "src/js",
+                    mainConfigFile: ["src/js/app-config.js"],
+                    dir: "dist/js",
+                    skipDirOptimize: false,
+                    removeCombined: true,
+                    optimize: 'none',
+                    modules: [
+						{
+							name: "jquery.period-selector",
+							// create:true,
+							// include: ["query.period-selector"],
+							exclude: ["jquery","jquery-ui"],
+						},
+						{
+							name: "knockout-jquery.period-selector",
+							exclude: ["jquery","jquery-ui","knockout"],
+							optimize: 'uglify2'
+						}
+					]
+                }
+            },
+		},
 		"jshint": {
 			"files": [
 				"Gruntfile.js",
@@ -66,8 +98,8 @@ module.exports = function(grunt) {
 			}
 		},
 		"watch": {
-			"files": "<%= dirs.src %>/js/*.js",
-			"tasks": ["clean:all", "uglify", "copy:main", "copy:examples", "copy:test"]
+			"files": "<%= dirs.src %>/**",
+			"tasks": ["default"]
 		},
 		
 	});
@@ -77,10 +109,14 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-karma');
+  //grunt.loadNpmTasks('requirejs');//
+  
+  grunt.registerTask('dist', ['clean:all','requirejs:dist', 'copy:css']);
+  grunt.registerTask('default', ['dist','copy:examples', 'copy:test']);
   
   
-  grunt.registerTask('default', ['clean:all','uglify',"copy:main",'copy:examples', 'copy:test']);
   grunt.registerTask('test', ['karma:unit']);
   grunt.registerTask('w', ['watch']);
  

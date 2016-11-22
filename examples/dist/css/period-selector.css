@@ -1,27 +1,37 @@
 ﻿/**PeriodSelector*/
 
-.period-selector.selcount-2 > div.row {
+.period-selector.selcount-2 > div.select-container {
     margin-right: 0px;
     margin-left: 0px;
 }
 
-.period-selector.selcount-2 > div.row > select:first-child{
+.period-selector.selcount-2 > div.select-container > select{
+
+    float: left;
+    width: 50%;
+}
+
+
+.period-selector.selcount-3> div.select-container > select{
+
+    float: left;
+    width: 33.33333%;
+}
+
+
+.period-selector > div.-select-container > select:first-child{
     padding-right: 0px;
     padding-left: 15px;
-    float: left;
-    width: 50%;
 }
-.period-selector.selcount-2 > div.row > select:nth-last-child(-n+1){
+.period-selector > div.select-container > select:nth-last-child(-n+1){
     padding-right: 15px;
     padding-left: 0px;
-    float: left;
-    width: 50%;
 }
 
 
-.period-selector:not(.monthSel) > div.row > select.monthSel,
-.period-selector:not(.quarterSel) > div.row > select.quarterSel,
-.period-selector:not(.yearSel) > div.row > select.yearSel
+.period-selector:not(.monthSel) > div.select-container > select.monthSel,
+.period-selector:not(.quarterSel) > div.select-container > select.quarterSel,
+.period-selector:not(.yearSel) > div.select-container > select.yearSel
 
 {
     display:none;

@@ -19,8 +19,25 @@
             this.period = new PeriodSelector(this.options);
             this.element.append(this.period.ui);
         },
-        value: function (date) {
+		value: function (date) {
             this.period.setDate(date);
+        },
+        minDate: function (date) {
+            this.period.setOptions({ "minDate": date });
+           
+        },
+        maxDate: function (date) {
+            this.period.setOptions({ "maxDate": date });
+            
+        },
+        change: function (func) {
+            this.period.setOptions({ "change": func });
+        },
+        dispatchChange: function () {
+            this.period.dispatchChange();
+        },
+        updateDate: function (mode) {
+            this.period.updateDate(mode);
         },
         destroy: function () {
 

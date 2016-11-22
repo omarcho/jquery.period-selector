@@ -16,7 +16,6 @@
 
     /**
     * PeriodSelector
-    * Este componente es independiente del filtro y podría estar en un js aparte.
     **/
     PeriodSelector = function (options) {
         
@@ -29,20 +28,21 @@
 
         this.ui = $("<div class='input-group period-selector'></div>");
         this.ui.addClass("period-selector");
-      //  <span class="input-group-btn">
-      //  <button class="btn btn-default" type="button">Go!</button>
-      //</span>
-        this.nextBut = $("<span class='input-group-btn'><button type='button' class='btn btn-xm btn-default' title='Next'><i class='glyphicon glyphicon-chevron-right'></i></button></span>");
-        this.prevBut = $("<span class='input-group-btn'><button type='button' class='btn btn-xm btn-default' title='Previous'><i class='glyphicon glyphicon-chevron-left'></i></button></span>");
+
+        this.nextBut = $("<span class='input-group-btn'><button type='button' class='btn' title='Next'><i class='glyphicon glyphicon-chevron-right'></i></button></span>");
+        this.prevBut = $("<span class='input-group-btn'><button type='button' class='btn' title='Previous'><i class='glyphicon glyphicon-chevron-left'></i></button></span>");
+		
+		this.nextBut.children("button").addClass(this.getOptions("nextBtnClass"));
+		this.prevBut.children("button").addClass(this.getOptions("prevBtnClass"));
         this.months = this.createMonths();
         this.quarters = this.createQuarters();
         this.years = this.createYears();
-
+ 
         
 
         this.ui.append(this.prevBut);
 
-        this.container = $("<div class='row' />");
+        this.container = $("<div class='select-container' />");
         this.ui.append(this.container);
         this.container.append(this.months);
         this.container.append(this.quarters);
@@ -119,9 +119,6 @@
         }
         this.ui.addClass("selcount-" + widthCount);
         this.ui.attr("title", this.getValueFormatted(true));
-        //if (this.months) this.months.css("width", parseInt(75 / widthCount) + "%");
-        //if (this.quarters) this.quarters.css("width", parseInt(75 / widthCount) + "%");
-        //if (this.years) this.years.css("width", parseInt(75 / widthCount) + "%");
     }
 
     PeriodSelector.prototype.updateDate = function (mode) {
@@ -129,23 +126,14 @@
         var quarter = this.getSelectedQuarter();
         var year = this.getSelectedYear();
         var monthSelector = this.getOptions("monthSelector");
-        //    var maxDate = this.getOptions("maxDate");
-        //    var minDate = this.getOptions("minDate");
-
-
+    
         if (mode == "quarter") {
             this.selectedDate.setMonth((quarter * 3) - 1);
         }
         if (mode == "month") {
             this.selectedDate.setMonth(month);
         }
-        // Valido que los meses no esten por fuera de los maximos y minimos.
-        //    if(maxDate.getFullYear() == year && month > maxDate.getMonth()){
-        //        this.selectedDate.setMonth(maxDate.getMonth());    
-        //    }
-        //    if(minDate.getFullYear() == year && month < minDate.getMonth()){
-        //        this.selectedDate.setMonth(minDate.getMonth());    
-        //    }
+       
         this.selectedDate.setFullYear(year);
         this.checkMinMax();
         this.dispatchChange();
@@ -155,7 +143,7 @@
         if (this.selectedDate == null) { return; }
         var maxDate = this.getOptions("maxDate");
         var minDate = this.getOptions("minDate");
-        // Valido que los meses no esten por fuera de los maximos y minimos.
+        // Validate that months aren't out of min and max.
         if (maxDate.getFullYear() == this.selectedDate.getFullYear()
            && this.selectedDate.getMonth() > maxDate.getMonth()) {
             this.selectedDate.setMonth(maxDate.getMonth());
@@ -170,24 +158,28 @@
         if (f != null) {
             f(this.selectedDate);
         }
+		this.ui.trigger("period-selector.change", [this.selectedDate]);
     }
     PeriodSelector.prototype.dispatchMonthChange = function () {
         var f = this.getOptions("monthChange");
         if (f != null) {
             f(this.getSelectedMonth(), this.selectedDate);
         }
+		this.ui.trigger("period-selector.monthChange", [this.selectedDate]);
     }
     PeriodSelector.prototype.dispatchQuarterChange = function () {
         var f = this.getOptions("quarterChange");
         if (f != null) {
             f(this.getSelectedQuarter(), this.selectedDate);
         }
+		this.ui.trigger("period-selector.quarterChange", [this.selectedDate]);
     }
     PeriodSelector.prototype.dispatchYearChange = function () {
         var f = this.getOptions("yearChange");
         if (f != null) {
             f(this.getSelectedYear(), this.selectedDate);
         }
+		this.ui.trigger("period-selector.yearChange", [this.selectedDate]);
     }
     PeriodSelector.prototype.getSelectedMonth = function () {
         if (!this.months) {
@@ -247,7 +239,9 @@
             "longMonthNames": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], // Names of months for drop-down and formatting
             "monthNames": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], // For formatting
             "quarterNames": ["Q1", "Q2", "Q3", "Q4"],
-            "longQuarterNames": ["Quarter 1", "Quarter 2", "Quartes 3", "Quarter 4"],
+            "longQuarterNamnes": ["Quarter 1", "Quarter 2", "Quartes 3", "Quarter 4"],
+			"nextBtnClass":"btn btn-default",
+			"prevBtnClass":"btn btn-default"
         }
     }
     PeriodSelector.prototype.getValueFormatted = function (longName) {
@@ -295,7 +289,7 @@
         return ret;
     }
     PeriodSelector.prototype.createMonths = function () {
-        // TODO: Como hacer privado este metodo?
+        // TODO: How to do this method private?
         var list = $("<select class='form-control monthSel'></select>")
         list.addClass("months-list");
 
@@ -305,12 +299,10 @@
                 that.updateDate("month");
                 that.dispatchMonthChange();
             });
-        //var container = $("<div></div>");
-        //container.append(list);
         return list;
     }
     PeriodSelector.prototype.addMonthsOptions = function (list) {
-        // TODO: Como hacer privado este metodo?
+        // TODO: How to do this method private?
         if (!list) { return }
         list.empty();
         var maxDate = this.getOptions("maxDate");
@@ -329,7 +321,7 @@
         }
     }
     PeriodSelector.prototype.createQuarters = function () {
-        // TODO: Como hacer privado este metodo?
+        // TODO: How to do this method private?
         var list = $("<select class='form-control quarterSel'></select>")
         list.addClass("quarter-list");
         var that = this;
@@ -338,12 +330,10 @@
                 that.updateDate("quarter");
                 that.dispatchQuarterChange();
             });
-        //var container = $("<div></div>");
-        //container.append(list);
         return list;
     }
     PeriodSelector.prototype.addQuartersOptions = function (list) {
-        // TODO: Como hacer privado este metodo?
+        // TODO: How to do this method private?
         if (!list) { return }
         list.empty();
         var maxDate = this.getOptions("maxDate");
@@ -361,7 +351,7 @@
         }
     }
     PeriodSelector.prototype.createYears = function () {
-        // TODO: Como hacer privado este metodo?
+        // TODO: How to do this method private?
         var list = $("<select class='form-control yearSel'></select>")
         list.addClass("year-list");
 
@@ -371,28 +361,35 @@
                 that.updateDate("month");
                 that.dispatchYearChange();
             });
-        //var container = $("<div></div>");
-        //container.append(list);
         return list;
     }
     PeriodSelector.prototype.addYearsOptions = function (list) {
-        // TODO: Como hacer privado este metodo?
+        // TODO: How to do this method private?
         if (!list) { return }
         list.empty();
-        //var y = this.getOptions("years", 6);
         var minDate = this.getOptions("minDate");
         var maxDate = this.getOptions("maxDate");
         var max = maxDate.getFullYear();
         var min = minDate.getFullYear();
+		var isSelected = false;
         for (var i = max; i >= min; i--) {
 
             var option = $("<option>" + i + "</option>");
             if (this.selectedDate.getFullYear() == i) {
                 option.attr("selected", true);
+				isSelected = true;
             }
             option.attr("value", i);
             list.append(option);
         }
+		// In case the year is not into values allowed we include this value in order to show the selected date correctly.
+		if(!isSelected){
+			var option = $("<option>(" + this.selectedDate.getFullYear() + ")</option>");
+            option.attr("selected", true);
+            option.attr("value", this.selectedDate.getFullYear());
+            list.append(option);
+		}
+		
     }
     PeriodSelector.prototype.setOptions = function (options) {
 
@@ -422,8 +419,9 @@
             this.dispatchMonthChange();
             this.dispatchChange();
         } else if (quarterSel) {
-            var normalMonth = this.normalizeMonthToQuarter(this.selectedDate.getMonth()) + value * 3;
-            this.selectedDate.setMonth(normalMonth);
+			var qMonth = this.normalizeMonthToQuarter(this.selectedDate.getMonth()) + value * 3;
+            var normalMonth = qMonth - this.selectedDate.getMonth();
+			this.moveMonths(normalMonth);
             this.dispatchQuarterChange();
             this.dispatchChange();
         } else if (yearSel) {
@@ -441,22 +439,22 @@
         var minDate = this.getOptions("minDate");
 
         next = next + 1 * value;
-        // Valido que no sobrepase el mes máximo.
+        // Validate that selected date doesn't exceed the max allowed.
         if (this.selectedDate.getFullYear() == maxDate.getFullYear()
           && next > maxDate.getMonth()) {
             return;
         }
-        // Valido que no sea menos que el mes minimo.
+        // Validate that selected date doesn't exceed the min month.
         if (this.selectedDate.getFullYear() == minDate.getFullYear()
           && next < minDate.getMonth()) {
             return;
         }
-        // Me pase de meses y tengo que moverme al año siguiente.
+        // In case it overpass 12 months we have to move it to the next year.
         if (next > 11 && this.canMoveYears(1)) {
             next = next - 12;
             nextYear++;
         }
-        // Si me tengo que mover al año anterior.
+        // Or we should move it to the previous year.
         if (next < 0 && this.canMoveYears(-1)) {
             next = 12 + next;
             nextYear--;
@@ -477,7 +475,7 @@
         var minYear = minDate.getFullYear();
 
 
-        // Me pase de meses y tengo que moverme al año siguiente.
+        // In case we overpass 12 months we have to move it to the next year.
         if (nextYear <= maxYear && nextYear >= minYear) {
             return true;
         }
