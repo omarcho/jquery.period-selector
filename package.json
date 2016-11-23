@@ -37,10 +37,10 @@
     "url": "git+https://github.com/omarcho/jquery.period-selector.git"
   },
   "keywords": [
-    "datatable",
-    "datatables.net",
-    "filter",
-    "multiselect"
+    "period-selector",
+    "date",
+    "month selector",
+    "quarter selector"
   ],
   "author": "Omar Ramirez",
   "license": "MIT",

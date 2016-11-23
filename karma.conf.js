@@ -18,10 +18,6 @@ module.exports = function (config) {
 			 './test/libs/css/*.css',
 			'./test/libs/js/jquery-1.10.2.min.js',
 			'./test/libs/js/bootstrap.js',
-			'./test/libs/js/bootstrap-multiselect.js',
-			'./test/libs/js/jquery.dataTables.js',
-			'./test/libs/js/dataTables.bootstrap.js',
-			'./test/dist/js/dataTables.multiselect.js', 
 			
 			'./test/js/*.js',
 			'./test/*.tests.js'
